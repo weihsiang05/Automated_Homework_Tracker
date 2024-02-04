@@ -9,7 +9,7 @@ const router = express.Router()
 // const studentParent = db.studentParent
 
 const {
-  findAllStudents, editStudentHomework, AddStudentHomework
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework
 } = require('../controllers/cramSchoolController')
 
 router.get('/', findAllStudents)
@@ -127,7 +127,7 @@ router.post('/edit/homework', editStudentHomework)
 //   }
 // })
 
-router.post('/edit/homework/add', AddStudentHomework)
+router.post('/edit/homework/add', addStudentHomework)
 
 // router.post('/:studentID/edit/homework/add', (req, res) => {
 //   try {
@@ -211,31 +211,33 @@ router.put('/:studentID/edit/homework/store', async (req, res, next) => {
 
 })
 
-router.delete('/:studentID/edit/homework/:homeworkId/delete', async (req, res) => {
-  const studentId = req.params.studentID
-  const todayHomeworkId = req.params.homeworkId
+router.delete('/delete/studentHomework', deleteStudentHomework);
 
-  console.log(todayHomeworkId)
-  console.log(studentId)
+// router.delete('/:studentID/edit/homework/:homeworkId/delete', async (req, res) => {
+//   const studentId = req.params.studentID
+//   const todayHomeworkId = req.params.homeworkId
 
-  return StudentHomework.findOne({
-    where: {
-      id: todayHomeworkId
-    }
-  })
-    .then((studentHomework) => {
-      console.log(studentHomework)
-      return studentHomework.destroy()
-        .then(() => {
-          req.flash('success', 'Success to DELETE the subject!')
-          res.redirect(`/cramSchool/${studentId}/edit/homework`)
-        })
-    })
-    .catch((error) => {
-      error.errorMessage = 'Fail to DELETE student!'
-    })
+//   console.log(todayHomeworkId)
+//   console.log(studentId)
 
-})
+//   return StudentHomework.findOne({
+//     where: {
+//       id: todayHomeworkId
+//     }
+//   })
+//     .then((studentHomework) => {
+//       console.log(studentHomework)
+//       return studentHomework.destroy()
+//         .then(() => {
+//           req.flash('success', 'Success to DELETE the subject!')
+//           res.redirect(`/cramSchool/${studentId}/edit/homework`)
+//         })
+//     })
+//     .catch((error) => {
+//       error.errorMessage = 'Fail to DELETE student!'
+//     })
+
+// })
 
 router.get('/:studentID/editInfo', (req, res) => {
   const studentId = req.params.studentID
@@ -374,39 +376,41 @@ router.put('/:studentID', (req, res, next) => {
 
 })
 
-router.delete('/:studentID', (req, res) => {
+router.delete('/delete/student', deleteStudent);
 
-  const studentId = req.params.studentID
-  //Get from passport expanded req.user
-  const userID = req.user.id
+// router.delete('/:studentID', (req, res) => {
 
-  return Student.findOne({
-    where: {
-      id: studentId
-    }
-  })
-    .then((student) => {
-      if (!student) {
-        req.flash('error', 'Do not have this student in the class!')
-        return res.redirect('/cramSchool')
-      }
+//   const studentId = req.params.studentID
+//   //Get from passport expanded req.user
+//   const userID = req.user.id
 
-      if (student.userId !== userID) {
-        req.flash('error', 'Insufficient permissions!')
-        return res.redirect('/cramSchool')
-      }
+//   return Student.findOne({
+//     where: {
+//       id: studentId
+//     }
+//   })
+//     .then((student) => {
+//       if (!student) {
+//         req.flash('error', 'Do not have this student in the class!')
+//         return res.redirect('/cramSchool')
+//       }
 
-      return student.destroy()
-        .then(() => {
-          req.flash('success', 'Success to DELETE a student!')
-          res.redirect('/cramSchool')
-        })
-    })
-    .catch((error) => {
-      error.errorMessage = 'Fail to DELETE student!'
-    })
+//       if (student.userId !== userID) {
+//         req.flash('error', 'Insufficient permissions!')
+//         return res.redirect('/cramSchool')
+//       }
 
-})
+//       return student.destroy()
+//         .then(() => {
+//           req.flash('success', 'Success to DELETE a student!')
+//           res.redirect('/cramSchool')
+//         })
+//     })
+//     .catch((error) => {
+//       error.errorMessage = 'Fail to DELETE student!'
+//     })
+
+// })
 
 module.exports = router
 

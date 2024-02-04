@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,6 +17,7 @@ import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
 function StudentHomeworks() {
+  const navigate = useNavigate(); // Change here
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -114,13 +115,95 @@ function StudentHomeworks() {
 
   }
 
-  const handleChange = (event, homeworkId) => {
+  const DeleteStudentHomework = async (homeworkId) => {
+    try {
+      //homeworkId.preventDefault()
+      //console.log(homeworkId)
+
+      const request = await fetch('/cramSchool/delete/studentHomework', {
+        method: 'DELETE',
+        body: JSON.stringify({ studentID: studentId, studentHomeworkId: homeworkId }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const json = await request.json()
+
+      // if (!request.ok) {
+      //   setError(json.error);
+      // } else {
+      //   //console.log(json)
+      //   setError(null);
+
+      //   if (json.status === "success") {
+      //     //Refresh the page again
+      //     window.location.reload();
+      //   } else {
+      //     setError(json.error);
+      //   }
+      // }
+
+      if (!request.ok) {
+        setError(json.error);
+      } else {
+        //console.log(json)
+        setError(null);
+        setTodayHomework(json.todayHomework);
+        setSubject(json.subject);
+      }
+
+    } catch (error) {
+      setError(error);
+    }
+  }
+
+  const DeleteStudent = async (e) => {
+    try {
+      e.preventDefault();
+
+      const request = await fetch('/cramSchool/delete/student', {
+        method: 'DELETE',
+        body: JSON.stringify({ studentID: studentId }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const json = await request.json()
+
+      if (!request.ok) {
+        setError(json.error);
+      } else {
+        //console.log(json)
+        setError(null);
+
+        if (json.status === "success") {
+          console.log("Heloooooo");
+          // Redirect to the homepage after successful deletion
+          navigate('/');
+        } else {
+          setError(json.error);
+        }
+      }
+
+    } catch (error) {
+      setError(error);
+    }
+
+  }
+
+  const BackToHomePage = async (e) => {
+    navigate('/');
+  }
+
+  const HandleChange = (event, homeworkId) => {
     const newStatuses = [...statuses];
     newStatuses[homeworkId] = event.target.value;
     setStatuses(newStatuses);
   };
 
-  const handleSubject = (e) => {
+  const HandleSubject = (e) => {
     e.preventDefault();
     setCreateSubject(e.target.value)
   }
@@ -143,7 +226,7 @@ function StudentHomeworks() {
               id="Subject"
               value={createSubject}
               label="subject"
-              onChange={handleSubject}
+              onChange={HandleSubject}
             >
               {subject && subject.map((subjectItem) => (
                 <MenuItem key={subjectItem.id} value={subjectItem.subjectName}>
@@ -166,6 +249,7 @@ function StudentHomeworks() {
               <TableRow>
                 <StyledTableCell align="center">Subject</StyledTableCell>
                 <StyledTableCell align="center">Status</StyledTableCell>
+                <StyledTableCell align="center">Delete Subject</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -181,7 +265,7 @@ function StudentHomeworks() {
                           id={todayHomework['subject.subjectName']}
                           value={statuses[todayHomework.id] || ''}
                           label="status"
-                          onChange={(event) => handleChange(event, todayHomework.id)}
+                          onChange={(event) => HandleChange(event, todayHomework.id)}
                         >
                           <MenuItem value={"Do not Finished"}>Do not Finished</MenuItem>
                           <MenuItem value={"Process"}>Process</MenuItem>
@@ -189,6 +273,11 @@ function StudentHomeworks() {
                         </Select>
                       </FormControl>
                     </Box>
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <Button variant="outlined" onClick={() => DeleteStudentHomework(todayHomework.id)} style={{ height: '50px' }}>
+                      Delete
+                    </Button>
                   </StyledTableCell>
                 </StyledTableRow>
               ))
@@ -206,13 +295,13 @@ function StudentHomeworks() {
       </div>
 
       <div>
-        {/* <Button variant="outlined" style={{ height: '50px' }}>
+        <Button variant="outlined" onClick={BackToHomePage} style={{ height: '50px' }}>
           Back
         </Button>
 
         <Button variant="outlined" onClick={DeleteStudent} style={{ height: '50px' }}>
           Delete
-        </Button> */}
+        </Button>
       </div>
 
     </div >
