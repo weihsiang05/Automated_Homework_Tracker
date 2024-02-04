@@ -72,21 +72,82 @@ const editStudentHomework = async (req, res) => {
         studentid: studentId
       },
       raw: true,
-      include: {
-        model: Subject,
-        required: true
-      }
+      include: [
+        {
+          model: Subject,
+          required: true
+        },
+        {
+          model: Student,
+          required: true
+        }
+      ]
     })
 
     console.log(todayHomework)
-    // res.render('todayHomework', { student, subject, todayHomework })
+    console.log(subject)
+    //res.render('todayHomework', { subject, todayHomework })
 
-    res.status(200).json(todayHomework)
+    res.status(200).json({ subject, todayHomework });
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
+const AddStudentHomework = async (req, res) => {
+  try {
+    //const theHomework = req.body
+    const studentID = req.body.studentID
+    const subjectID = req.body.subjectID
+
+    const addSpecificSubject = await StudentHomework.create({
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      studentId: studentID,
+      subjectId: subjectID
+    })
+
+    if (addSpecificSubject) {
+      console.log("Helooooo")
+      const subject = await Subject.findAll({
+        attributes: ['id', 'subjectName'],
+        raw: true
+      })
+
+      const todayHomework = await StudentHomework.findAll({
+        where: {
+          studentid: studentID
+        },
+        raw: true,
+        include: [
+          {
+            model: Subject,
+            required: true
+          },
+          {
+            model: Student,
+            required: true
+          }
+        ]
+      })
+
+      res.status(200).json({ subject, todayHomework });
+    } else {
+      res.status(400).json({ error: error.message })
+    }
+    // .then(() => {
+    //   req.flash('success', 'Success to add a subject!')
+    //   res.redirect(`/cramSchool/${studentID}/edit/homework`)
+    // })
+    // .catch((error) => {
+    //   console.log(error)
+    //   return res.redirect('back')
+    // })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
 }
 
 module.exports = {
-  findAllStudents, editStudentHomework
+  findAllStudents, editStudentHomework, AddStudentHomework
 }

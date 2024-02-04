@@ -9,7 +9,7 @@ const router = express.Router()
 // const studentParent = db.studentParent
 
 const {
-  findAllStudents, editStudentHomework
+  findAllStudents, editStudentHomework, AddStudentHomework
 } = require('../controllers/cramSchoolController')
 
 router.get('/', findAllStudents)
@@ -127,30 +127,32 @@ router.post('/edit/homework', editStudentHomework)
 //   }
 // })
 
-router.post('/:studentID/edit/homework/add', (req, res) => {
-  try {
-    const theHomework = req.body
-    const studentID = req.params.studentID
+router.post('/edit/homework/add', AddStudentHomework)
 
-    return StudentHomework.create({
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      studentId: studentID,
-      subjectId: theHomework.subjectName
-    })
-      .then(() => {
-        req.flash('success', 'Success to add a subject!')
-        res.redirect(`/cramSchool/${studentID}/edit/homework`)
-      })
-      .catch((error) => {
-        console.log(error)
-        return res.redirect('back')
-      })
-  } catch (error) {
-    console.log(error)
-    return res.redirect('back')
-  }
-})
+// router.post('/:studentID/edit/homework/add', (req, res) => {
+//   try {
+//     const theHomework = req.body
+//     const studentID = req.params.studentID
+
+//     return StudentHomework.create({
+//       createdAt: new Date(),
+//       updatedAt: new Date(),
+//       studentId: studentID,
+//       subjectId: theHomework.subjectName
+//     })
+//       .then(() => {
+//         req.flash('success', 'Success to add a subject!')
+//         res.redirect(`/cramSchool/${studentID}/edit/homework`)
+//       })
+//       .catch((error) => {
+//         console.log(error)
+//         return res.redirect('back')
+//       })
+//   } catch (error) {
+//     console.log(error)
+//     return res.redirect('back')
+//   }
+// })
 
 router.put('/:studentID/edit/homework/store', async (req, res, next) => {
   try {
