@@ -125,6 +125,8 @@ const addStudentHomework = async (req, res) => {
         ]
       })
 
+      console.log(todayHomework)
+
       res.status(200).json({ subject, todayHomework });
     } else {
       res.status(400).json({ error: error.message })
@@ -250,6 +252,43 @@ const deleteStudentHomework = async (req, res) => {
   // })
 }
 
+const updateHomeWorkStatus = async (req, res) => {
+  try {
+    const selectedStatusArray = req.body.statuses
+    const studentId = req.params.studentID
+    const index = 0;
+    //const subjectIdArray = req.body.subjectId
+
+    //console.log(subjectIdArray)
+    //console.log(student)
+    console.log('Selected Status:', selectedStatusArray);
+    console.log(selectedStatusArray['67']);
+    const allHomeworkStatus = Object.entries(selectedStatusArray);
+    console.log(allHomeworkStatus);
+    console.log(typeof (selectedStatusArray));
+    console.log(studentId)
+
+    for (const [key, value] of allHomeworkStatus) {
+      const findHomeworkId = await StudentHomework.findOne({
+        where: {
+          id: key
+        }
+      })
+
+      if (findHomeworkId) {
+        await findHomeworkId.update({ status: value });
+      } else {
+        res.status(400).json({ status: "error", error: "Can not find the Homework." });
+      }
+    }
+
+    res.status(200).json({ status: "success", message: "Successfully update the status." });
+
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
 module.exports = {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus
 }

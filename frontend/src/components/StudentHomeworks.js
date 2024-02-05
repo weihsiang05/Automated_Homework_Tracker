@@ -16,8 +16,9 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
+
 function StudentHomeworks() {
-  const navigate = useNavigate(); // Change here
+  const navigate = useNavigate();
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -43,8 +44,15 @@ function StudentHomeworks() {
   const { studentId } = useParams();
   const [todayHomework, setTodayHomework] = useState(null);
   const [subject, setSubject] = useState(null);
-  const [statuses, setStatuses] = useState('');
+  //const [statuses, setStatuses] = useState('');
+  const storedStatuses = JSON.parse(localStorage.getItem('statuses')) || {};
+  const [statuses, setStatuses] = useState(storedStatuses);
   const [createSubject, setCreateSubject] = useState('');
+
+  // Save statuses to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('statuses', JSON.stringify(statuses));
+  }, [statuses]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,7 +189,7 @@ function StudentHomeworks() {
         if (json.status === "success") {
           console.log("Heloooooo");
           // Redirect to the homepage after successful deletion
-          navigate('/');
+          //navigate('/');
         } else {
           setError(json.error);
         }
@@ -193,15 +201,44 @@ function StudentHomeworks() {
 
   }
 
-  const BackToHomePage = async (e) => {
-    navigate('/');
-  }
-
   const HandleChange = (event, homeworkId) => {
-    const newStatuses = [...statuses];
+    const newStatuses = { ...statuses };
     newStatuses[homeworkId] = event.target.value;
     setStatuses(newStatuses);
   };
+
+  const UpdateHomeworkStatus = async (e) => {
+    try {
+      e.preventDefault();
+
+      const request = await fetch('/cramSchool/update/homeWorkStatus', {
+        method: 'PUT',
+        body: JSON.stringify({ studentID: studentId, statuses: statuses }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const json = await request.json()
+
+      if (!request.ok) {
+        setError(json.error);
+      } else {
+        setError(null);
+
+        if (json.status === "success") {
+          console.log("Heloooooo");
+          // Redirect to the homepage after successful deletion
+          navigate('/');
+        } else {
+          setError(json.error);
+        }
+      }
+
+    } catch (error) {
+      setError(error);
+    }
+  }
 
   const HandleSubject = (e) => {
     e.preventDefault();
@@ -295,7 +332,7 @@ function StudentHomeworks() {
       </div>
 
       <div>
-        <Button variant="outlined" onClick={BackToHomePage} style={{ height: '50px' }}>
+        <Button variant="outlined" onClick={UpdateHomeworkStatus} style={{ height: '50px' }}>
           Back
         </Button>
 

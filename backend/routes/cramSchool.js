@@ -9,7 +9,7 @@ const router = express.Router()
 // const studentParent = db.studentParent
 
 const {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus
 } = require('../controllers/cramSchoolController')
 
 router.get('/', findAllStudents)
@@ -154,62 +154,64 @@ router.post('/edit/homework/add', addStudentHomework)
 //   }
 // })
 
-router.put('/:studentID/edit/homework/store', async (req, res, next) => {
-  try {
-    const selectedStatusArray = req.body.status
-    const studentId = req.params.studentID
-    const subjectIdArray = req.body.subjectId
+router.put('/update/homeWorkStatus', updateHomeWorkStatus);
 
-    console.log(subjectIdArray)
-    //console.log(student)
-    console.log('Selected Status:', selectedStatusArray);
-    console.log(typeof (selectedStatusArray))
+// router.put('/:studentID/edit/homework/store', async (req, res, next) => {
+//   try {
+//     const selectedStatusArray = req.body.status
+//     const studentId = req.params.studentID
+//     const subjectIdArray = req.body.subjectId
 
-    const student = await StudentHomework.findOne({
-      where: {
-        studentId: studentId
-      }
-    })
+//     console.log(subjectIdArray)
+//     //console.log(student)
+//     console.log('Selected Status:', selectedStatusArray);
+//     console.log(typeof (selectedStatusArray))
 
-    if (!student) {
-      req.flash('error', 'Student not found!');
-      //return res.redirect('/cramSchool');
-    }
+//     const student = await StudentHomework.findOne({
+//       where: {
+//         studentId: studentId
+//       }
+//     })
 
-    for (let i = 0; i < subjectIdArray.length; i++) {
-      const subjectId = subjectIdArray[i];
-      const selectedStatus = selectedStatusArray[i];
-      //console.log(subjectId)
-      //console.log(selectedStatus)
-      //console.log(typeof (selectedStatus))
-      const homework = await StudentHomework.findOne({
-        where: {
-          studentId: studentId,
-          subjectId: subjectId,
-        },
-      });
+//     if (!student) {
+//       req.flash('error', 'Student not found!');
+//       //return res.redirect('/cramSchool');
+//     }
 
-      // if (!homework) {
-      //   req.flash('error', `Homework not found for student ${studentId} and subject ${subjectId}!`);
-      //   //return res.redirect('/cramSchool');
-      // }
+//     for (let i = 0; i < subjectIdArray.length; i++) {
+//       const subjectId = subjectIdArray[i];
+//       const selectedStatus = selectedStatusArray[i];
+//       //console.log(subjectId)
+//       //console.log(selectedStatus)
+//       //console.log(typeof (selectedStatus))
+//       const homework = await StudentHomework.findOne({
+//         where: {
+//           studentId: studentId,
+//           subjectId: subjectId,
+//         },
+//       });
 
-      //console.log(homework)
+//       // if (!homework) {
+//       //   req.flash('error', `Homework not found for student ${studentId} and subject ${subjectId}!`);
+//       //   //return res.redirect('/cramSchool');
+//       // }
 
-      // Update the status of the homework
-      await homework.update({
-        status: selectedStatus
-      });
+//       //console.log(homework)
 
-      req.flash('success', 'Success to UPDATE student homework status!');
-      //res.redirect('/cramSchool')
-    }
-  } catch (error) {
-    console.error(error);
-    error.errorMessage = 'Fail to UPDATE';
-  }
+//       // Update the status of the homework
+//       await homework.update({
+//         status: selectedStatus
+//       });
 
-})
+//       req.flash('success', 'Success to UPDATE student homework status!');
+//       //res.redirect('/cramSchool')
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     error.errorMessage = 'Fail to UPDATE';
+//   }
+
+// })
 
 router.delete('/delete/studentHomework', deleteStudentHomework);
 
