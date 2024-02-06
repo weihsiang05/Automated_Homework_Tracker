@@ -301,7 +301,23 @@ const getStudentInfo = async (req, res) => {
 
     if (findStudent) {
       //console.log(findStudent)
-      res.status(200).json({ findStudent });
+      const parent = await Parent.findAll({
+        attributes: ['id', 'name'],
+        raw: true
+      })
+
+      const findStudentParent = await studentParent.findAll({
+        where: {
+          studentId: studentId
+        },
+        raw: true,
+        include: {
+          model: Parent,
+          required: true
+        }
+      })
+
+      res.status(200).json({ findStudent, parent, findStudentParent });
     } else {
       res.status(400).json({ status: "error", error: "Student not found." });
     }
@@ -331,7 +347,6 @@ const updateStudentInfo = async (req, res) => {
       console.log("Heloooooo")
       await findStudent.update({ FiristName: body.FirstName, LastName: body.LastName });
 
-      console.log(findStudent)
 
       res.status(200).json({ findStudent });
     } else {
@@ -342,6 +357,121 @@ const updateStudentInfo = async (req, res) => {
   }
 }
 
+const addStudentParents = async (req, res) => {
+  try {
+    const studentId = req.body.studentID
+    const studentparentId = req.body.parentID
+
+    const checkParent = await studentParent.findOne({
+      where: {
+        studentId: studentId,
+        parentId: studentparentId
+      }
+    })
+
+    if (checkParent) {
+      res.status(200).json({ status: "error", error: "Parent has already exist!" });
+    } else {
+      const addstudentParents = await studentParent.create({
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        studentId: studentId,
+        parentId: studentparentId
+      })
+
+      const findStudentParent = await studentParent.findAll({
+        where: {
+          studentId: studentId
+        },
+        raw: true,
+        include: {
+          model: Parent,
+          required: true
+        }
+      })
+      res.status(200).json({ findStudentParent });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+
+}
+
+const deleteStudentParents = async (req, res) => {
+  const studentId = req.body.studentID
+  const studentparentId = req.body.parentID
+
+  try {
+    const deleteRelationship = await studentParent.findOne({
+      where: {
+        parentId: studentparentId,
+        studentId: studentId
+      }
+    })
+
+    if (deleteRelationship) {
+      await deleteRelationship.destroy()
+      const findStudentParent = await studentParent.findAll({
+        where: {
+          studentId: studentId
+        },
+        raw: true,
+        include: {
+          model: Parent,
+          required: true
+        }
+      })
+      res.status(200).json({ findStudentParent });
+    } else {
+      res.status(400).json({ status: "error", error: "Can't delete the student parent!" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
+// const GetStudentParent = async (req, res) => {
+
+//   try {
+//     //const studentId = req.body.studentID
+//     //const studentparent = req.body
+
+//     const parent = await Parent.findAll({
+//       attributes: ['id', 'name'],
+//       raw: true
+//     })
+
+//     // const student = await Student.findByPk(studentId, {
+//     //   attributes: ['id', 'FiristName', 'LastName'],
+//     //   raw: true
+//     // })
+
+//     // const findStudentParent = await studentParent.findAll({
+//     //   where: {
+//     //     studentId: studentId
+//     //   },
+//     //   raw: true,
+//     //   include: {
+//     //     model: Parent,
+//     //     required: true
+//     //   }
+//     // })
+
+//     if (parent) {
+//       console.log(parent)
+//       res.status(200).json({ parent });
+//     } else {
+//       res.status(400).json({ status: "error", error: "Can't find the student parent!" });
+//     }
+
+
+//   } catch (error) {
+//     res.status(400).json({ error: error.message })
+//   }
+// }
+
+
+
 module.exports = {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents
 }

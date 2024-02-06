@@ -9,7 +9,7 @@ const router = express.Router()
 // const studentParent = db.studentParent
 
 const {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents
 } = require('../controllers/cramSchoolController')
 
 router.get('/', findAllStudents)
@@ -259,92 +259,98 @@ router.post('/studentInfo', getStudentInfo)
 //     })
 // })
 
-router.get('/:studentID/edit/studentParent', async (req, res) => {
-  const studentId = req.params.studentID
-  //const studentparent = req.body
+//router.get('/edit/studentParent', GetStudentParent);
 
-  const parent = await Parent.findAll({
-    attributes: ['id', 'name'],
-    raw: true
-  })
+// router.get('/:studentID/edit/studentParent', async (req, res) => {
+//   const studentId = req.params.studentID
+//   //const studentparent = req.body
 
-  const student = await Student.findByPk(studentId, {
-    attributes: ['id', 'FiristName', 'LastName'],
-    raw: true
-  })
+//   const parent = await Parent.findAll({
+//     attributes: ['id', 'name'],
+//     raw: true
+//   })
 
-  const findStudentParent = await studentParent.findAll({
-    where: {
-      studentId: studentId
-    },
-    raw: true,
-    include: {
-      model: Parent,
-      required: true
-    }
-  })
+//   const student = await Student.findByPk(studentId, {
+//     attributes: ['id', 'FiristName', 'LastName'],
+//     raw: true
+//   })
 
-  console.log(findStudentParent)
+//   const findStudentParent = await studentParent.findAll({
+//     where: {
+//       studentId: studentId
+//     },
+//     raw: true,
+//     include: {
+//       model: Parent,
+//       required: true
+//     }
+//   })
 
-  res.render('studentParents', { parent, student, findStudentParent })
-  //res.redirect('/cramSchool')
-  //console.log(req.body)
+//   console.log(findStudentParent)
 
-})
+//   res.render('studentParents', { parent, student, findStudentParent })
+//   //res.redirect('/cramSchool')
+//   //console.log(req.body)
 
-router.post('/:studentID/edit/studentParent/add', async (req, res) => {
-  const studentId = req.params.studentID
-  const studentparentId = req.body.parentName
+// })
 
-  const checkParent = await studentParent.findOne({
-    where: {
-      studentId: studentId,
-      parentId: studentparentId
-    }
-  })
+router.post('/add/studentParent', addStudentParents)
 
-  if (checkParent) {
-    req.flash('error', 'Parent name already exists for this student.');
+// router.post('/:studentID/edit/studentParent/add', async (req, res) => {
+//   const studentId = req.params.studentID
+//   const studentparentId = req.body.parentName
 
-    return res.redirect(`/cramSchool/${studentId}/edit/studentParent`);
-  }
+//   const checkParent = await studentParent.findOne({
+//     where: {
+//       studentId: studentId,
+//       parentId: studentparentId
+//     }
+//   })
 
-  const addstudentParents = await studentParent.create({
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    studentId: studentId,
-    parentId: studentparentId
-  })
+//   if (checkParent) {
+//     req.flash('error', 'Parent name already exists for this student.');
 
-  req.flash('success', 'Successfully added parent');
-  return res.redirect(`/cramSchool/${studentId}/edit/studentParent`)
+//     return res.redirect(`/cramSchool/${studentId}/edit/studentParent`);
+//   }
 
-})
+//   const addstudentParents = await studentParent.create({
+//     createdAt: new Date(),
+//     updatedAt: new Date(),
+//     studentId: studentId,
+//     parentId: studentparentId
+//   })
 
-router.delete('/:studentID/edit/studentParent/:parentId/delete', async (req, res) => {
-  const studentId = req.params.studentID
-  const studentparentId = req.params.parentId
+//   req.flash('success', 'Successfully added parent');
+//   return res.redirect(`/cramSchool/${studentId}/edit/studentParent`)
 
-  //console.log(studentparentId)
+// })
 
-  try {
-    const deleteRelationship = await studentParent.findOne({
-      where: {
-        id: studentparentId
-      }
-    })
+router.delete('/delete/studentParent', deleteStudentParents)
 
-    if (deleteRelationship) {
-      deleteRelationship.destroy()
-      req.flash('success', 'Success to DELETE the parent!')
-      res.redirect(`/cramSchool/${studentId}/edit/studentParent`)
-    } else {
-      error.errorMessage = 'Fail to delete the student Parent!'
-    }
-  } catch (error) {
-    error.errorMessage = 'Fail to delete the student Parent!'
-  }
-})
+// router.delete('/:studentID/edit/studentParent/:parentId/delete', async (req, res) => {
+//   const studentId = req.params.studentID
+//   const studentparentId = req.params.parentId
+
+//   //console.log(studentparentId)
+
+//   try {
+//     const deleteRelationship = await studentParent.findOne({
+//       where: {
+//         id: studentparentId
+//       }
+//     })
+
+//     if (deleteRelationship) {
+//       deleteRelationship.destroy()
+//       req.flash('success', 'Success to DELETE the parent!')
+//       res.redirect(`/cramSchool/${studentId}/edit/studentParent`)
+//     } else {
+//       error.errorMessage = 'Fail to delete the student Parent!'
+//     }
+//   } catch (error) {
+//     error.errorMessage = 'Fail to delete the student Parent!'
+//   }
+// })
 
 router.put('/update/studentInfo', updateStudentInfo);
 

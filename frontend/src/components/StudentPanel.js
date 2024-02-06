@@ -72,49 +72,67 @@ function StudentPanel() {
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>StudentID</StyledTableCell>
-            <StyledTableCell align="right">Name</StyledTableCell>
-            <StyledTableCell align="right">Homework</StyledTableCell>
-            <StyledTableCell align="right">information</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {responseData ? (
-            responseData.map((student) => (
-              <StyledTableRow key={student.id}>
-                <StyledTableCell component="th" scope="row">
-                  {student.id}
-                </StyledTableCell>
-                <StyledTableCell align="right">{student.FiristName}</StyledTableCell>
-                <StyledTableCell align="right">
-                  {/* <Button variant="outlined" style={{ marginBottom: '20px' }}>
+    <div>
+
+      <div>
+        <Button variant="outlined" onClick={'/'} style={{ height: '50px' }}>
+          Add Student
+        </Button>
+      </div>
+
+      <div>
+        <Button variant="outlined" onClick={'/'} style={{ height: '50px' }}>
+          Add Subject
+        </Button>
+      </div>
+
+      <div>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>StudentID</StyledTableCell>
+                <StyledTableCell align="right">Name</StyledTableCell>
+                <StyledTableCell align="right">Homework</StyledTableCell>
+                <StyledTableCell align="right">information</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {responseData ? (
+                responseData.map((student) => (
+                  <StyledTableRow key={student.id}>
+                    <StyledTableCell component="th" scope="row">
+                      {student.id}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{student.FiristName}</StyledTableCell>
+                    <StyledTableCell align="right">
+                      {/* <Button variant="outlined" style={{ marginBottom: '20px' }}>
                     <Link to={`/${student.id}/dailyHomework`} style={{ textDecoration: 'none' }}>+</Link>
                   </Button> */}
-                  <Button variant="outlined" onClick={() => DirectToStudentHomeworkPage(student.id)} style={{ marginBottom: '20px' }}>
-                    +
-                  </Button>
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <Button variant="outlined" onClick={() => DirectToStudentInfoPage(student.id)} style={{ marginBottom: '20px' }}>
-                    Edit
-                  </Button>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))
-          ) : (
-            <TableRow>
-              <StyledTableCell align="center">
-                Can't render the studernt Info!
-              </StyledTableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                      <Button variant="outlined" onClick={() => DirectToStudentHomeworkPage(student.id)} style={{ marginBottom: '20px' }}>
+                        +
+                      </Button>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      <Button variant="outlined" onClick={() => DirectToStudentInfoPage(student.id)} style={{ marginBottom: '20px' }}>
+                        Edit
+                      </Button>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <StyledTableCell align="center">
+                    Can't render the studernt Info!
+                  </StyledTableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </div>
+
   );
 }
 
