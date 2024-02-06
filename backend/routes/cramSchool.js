@@ -9,7 +9,7 @@ const router = express.Router()
 // const studentParent = db.studentParent
 
 const {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo
 } = require('../controllers/cramSchoolController')
 
 router.get('/', findAllStudents)
@@ -241,19 +241,23 @@ router.delete('/delete/studentHomework', deleteStudentHomework);
 
 // })
 
-router.get('/:studentID/editInfo', (req, res) => {
-  const studentId = req.params.studentID
-  //Get from passport expanded req.user
-  const userID = req.user.id
 
-  return Student.findByPk(studentId, {
-    attributes: ['id', 'FiristName', 'LastName'],
-    raw: true
-  })
-    .then((student) => {
-      res.render('editStudentInfo', { student })
-    })
-})
+router.post('/studentInfo', getStudentInfo)
+
+
+// router.get('/:studentID/editInfo', (req, res) => {
+//   const studentId = req.params.studentID
+//   //Get from passport expanded req.user
+//   const userID = req.user.id
+
+//   return Student.findByPk(studentId, {
+//     attributes: ['id', 'FiristName', 'LastName'],
+//     raw: true
+//   })
+//     .then((student) => {
+//       res.render('editStudentInfo', { student })
+//     })
+// })
 
 router.get('/:studentID/edit/studentParent', async (req, res) => {
   const studentId = req.params.studentID
@@ -342,41 +346,43 @@ router.delete('/:studentID/edit/studentParent/:parentId/delete', async (req, res
   }
 })
 
-router.put('/:studentID', (req, res, next) => {
+router.put('/update/studentInfo', updateStudentInfo);
 
-  const studentId = req.params.studentID
-  const body = req.body
-  //Get from passport expanded req.user
-  const userID = req.user.id
+// router.put('/:studentID', (req, res, next) => {
 
-  return Student.findOne({
-    where: {
-      id: studentId
-    }
-  })
-    .then((student) => {
-      if (!student) {
-        req.flash('error', 'Do not have this student in the class!')
-        return res.redirect('/cramSchool')
-      }
+//   const studentId = req.params.studentID
+//   const body = req.body
+//   //Get from passport expanded req.user
+//   const userID = req.user.id
 
-      if (student.userId !== userID) {
-        req.flash('error', 'Insufficient permissions!')
-        return res.redirect('/cramSchool')
-      }
+//   return Student.findOne({
+//     where: {
+//       id: studentId
+//     }
+//   })
+//     .then((student) => {
+//       if (!student) {
+//         req.flash('error', 'Do not have this student in the class!')
+//         return res.redirect('/cramSchool')
+//       }
 
-      return student.update({ id: body.studentID, FiristName: body.firstName, LastName: body.lastName })
-        .then(() => {
-          req.flash('success', 'Success to UPDATE student information!')
-          res.redirect('/cramSchool')
-        })
-    })
-    .catch((error) => {
-      error.errorMessage = 'Fail to UPDATE student information!'
-      next(error)
-    })
+//       if (student.userId !== userID) {
+//         req.flash('error', 'Insufficient permissions!')
+//         return res.redirect('/cramSchool')
+//       }
 
-})
+//       return student.update({ id: body.studentID, FiristName: body.firstName, LastName: body.lastName })
+//         .then(() => {
+//           req.flash('success', 'Success to UPDATE student information!')
+//           res.redirect('/cramSchool')
+//         })
+//     })
+//     .catch((error) => {
+//       error.errorMessage = 'Fail to UPDATE student information!'
+//       next(error)
+//     })
+
+// })
 
 router.delete('/delete/student', deleteStudent);
 

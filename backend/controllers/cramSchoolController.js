@@ -256,17 +256,17 @@ const updateHomeWorkStatus = async (req, res) => {
   try {
     const selectedStatusArray = req.body.statuses
     const studentId = req.params.studentID
-    const index = 0;
     //const subjectIdArray = req.body.subjectId
 
     //console.log(subjectIdArray)
     //console.log(student)
-    console.log('Selected Status:', selectedStatusArray);
-    console.log(selectedStatusArray['67']);
+    // console.log('Selected Status:', selectedStatusArray);
+    // console.log(selectedStatusArray['67']);
+    // console.log(allHomeworkStatus);
+    // console.log(typeof (selectedStatusArray));
+    // console.log(studentId)
+
     const allHomeworkStatus = Object.entries(selectedStatusArray);
-    console.log(allHomeworkStatus);
-    console.log(typeof (selectedStatusArray));
-    console.log(studentId)
 
     for (const [key, value] of allHomeworkStatus) {
       const findHomeworkId = await StudentHomework.findOne({
@@ -277,8 +277,6 @@ const updateHomeWorkStatus = async (req, res) => {
 
       if (findHomeworkId) {
         await findHomeworkId.update({ status: value });
-      } else {
-        res.status(400).json({ status: "error", error: "Can not find the Homework." });
       }
     }
 
@@ -289,6 +287,61 @@ const updateHomeWorkStatus = async (req, res) => {
   }
 }
 
+const getStudentInfo = async (req, res) => {
+
+  try {
+    const studentId = req.body.studentID
+    //Get from passport expanded req.user
+    //const userID = req.user.id
+
+    const findStudent = await Student.findByPk(studentId, {
+      attributes: ['id', 'FiristName', 'LastName'],
+      raw: true
+    })
+
+    if (findStudent) {
+      //console.log(findStudent)
+      res.status(200).json({ findStudent });
+    } else {
+      res.status(400).json({ status: "error", error: "Student not found." });
+    }
+
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
+
+const updateStudentInfo = async (req, res) => {
+
+  try {
+    const studentId = req.body.studentID
+    const body = req.body;
+    //const body = req.body
+    //Get from passport expanded req.user
+    //const userID = req.user.id
+
+    const findStudent = await Student.findOne({
+      where: {
+        id: studentId
+      }
+    })
+
+    if (findStudent) {
+      console.log("Heloooooo")
+      await findStudent.update({ FiristName: body.FirstName, LastName: body.LastName });
+
+      console.log(findStudent)
+
+      res.status(200).json({ findStudent });
+    } else {
+      res.status(400).json({ status: "error", error: "Student not found." });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
 module.exports = {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo
 }

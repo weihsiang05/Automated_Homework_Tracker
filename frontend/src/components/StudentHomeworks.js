@@ -189,7 +189,7 @@ function StudentHomeworks() {
         if (json.status === "success") {
           console.log("Heloooooo");
           // Redirect to the homepage after successful deletion
-          //navigate('/');
+          navigate('/');
         } else {
           setError(json.error);
         }

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import DailyHomework from './pages/DailyHomework';
+import StudentInfo from './pages/StudentInfo'
 
 function App() {
 
@@ -16,8 +17,13 @@ function App() {
           />
 
           <Route
-            path="/:studentId/dailyHomework"
+            path="/:studentId/dailyHomework/*"
             element={<DailyHomework />}
+          />
+
+          <Route
+            path="/:studentId/studentInfo/*"
+            element={<StudentInfo />}
           />
 
         </Routes>

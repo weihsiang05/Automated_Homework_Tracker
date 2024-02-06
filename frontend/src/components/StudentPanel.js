@@ -9,9 +9,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useState, useEffect } from 'react'
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
+
 function StudentPanel() {
+  const navigate = useNavigate();
   const [studentNames, setStudentNames] = useState('');
   const [error, setError] = useState(null);
   const [responseData, setResponseData] = useState(null);
@@ -60,6 +63,13 @@ function StudentPanel() {
     fetchData(); // Call the fetchData function when the component mounts
   }, []);
 
+  const DirectToStudentHomeworkPage = async (studentId) => {
+    navigate(`/${studentId}/dailyHomework`);
+  }
+
+  const DirectToStudentInfoPage = async (studentId) => {
+    navigate(`/${studentId}/studentInfo`);
+  }
 
   return (
     <TableContainer component={Paper}>
@@ -81,12 +91,15 @@ function StudentPanel() {
                 </StyledTableCell>
                 <StyledTableCell align="right">{student.FiristName}</StyledTableCell>
                 <StyledTableCell align="right">
-                  <Button variant="outlined" style={{ marginBottom: '20px' }}>
+                  {/* <Button variant="outlined" style={{ marginBottom: '20px' }}>
                     <Link to={`/${student.id}/dailyHomework`} style={{ textDecoration: 'none' }}>+</Link>
+                  </Button> */}
+                  <Button variant="outlined" onClick={() => DirectToStudentHomeworkPage(student.id)} style={{ marginBottom: '20px' }}>
+                    +
                   </Button>
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <Button variant="outlined" onClick={"/"} style={{ marginBottom: '20px' }}>
+                  <Button variant="outlined" onClick={() => DirectToStudentInfoPage(student.id)} style={{ marginBottom: '20px' }}>
                     Edit
                   </Button>
                 </StyledTableCell>
