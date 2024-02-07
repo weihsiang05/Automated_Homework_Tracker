@@ -9,7 +9,7 @@ const router = express.Router()
 // const studentParent = db.studentParent
 
 const {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents, addNewStudent
 } = require('../controllers/cramSchoolController')
 
 router.get('/', findAllStudents)
@@ -24,31 +24,33 @@ router.get('/new/student', (req, res) => {
   }
 })
 
+router.post('/new/student', addNewStudent);
+
 //Create new student
-router.post('/new/student', (req, res, next) => {
+// router.post('/new/student', (req, res, next) => {
 
-  const student = req.body
-  //Get from passport expanded req.user
-  const userID = req.user.id
+//   const student = req.body
+//   //Get from passport expanded req.user
+//   const userID = req.user.id
 
-  return Student.create({
-    id: student.studentID,
-    FiristName: student.firstName,
-    LastName: student.lastName,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    userId: userID
-  })
-    .then(() => {
-      req.flash('success', 'Success to CREATE a student!')
-      res.redirect('/cramSchool')
-    })
-    .catch((error) => {
-      error.errorMessage = 'Fail to CREATE a student!'
-      next(error)
-    })
+//   return Student.create({
+//     id: student.studentID,
+//     FiristName: student.firstName,
+//     LastName: student.lastName,
+//     createdAt: new Date(),
+//     updatedAt: new Date(),
+//     userId: userID
+//   })
+//     .then(() => {
+//       req.flash('success', 'Success to CREATE a student!')
+//       res.redirect('/cramSchool')
+//     })
+//     .catch((error) => {
+//       error.errorMessage = 'Fail to CREATE a student!'
+//       next(error)
+//     })
 
-})
+// })
 
 //render new subject page
 router.get('/new/subject', (req, res) => {

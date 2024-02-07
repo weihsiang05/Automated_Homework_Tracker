@@ -430,6 +430,42 @@ const deleteStudentParents = async (req, res) => {
   }
 }
 
+const addNewStudent = async (req, res) => {
+  const student = req.body
+  //Get from passport expanded req.user
+  //const userID = req.user.id
+
+  try {
+
+    const findStudent = await Student.findOne({
+      where: {
+        id: student.studentID
+      }
+    })
+
+    if (findStudent) {
+      res.status(200).json({ status: "error", error: "Student ID has already exist!" });
+    } else {
+      const createStudent = await Student.create({
+        id: student.studentID,
+        FiristName: student.firstName,
+        LastName: student.lastName,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        userId: 1
+      })
+
+      if (createStudent) {
+        res.status(200).json({ status: "success", error: "Successfully create a new student!" });
+      } else {
+        res.status(200).json({ status: "error", error: "Fail to create a new student!" });
+      }
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
 // const GetStudentParent = async (req, res) => {
 
 //   try {
@@ -473,5 +509,5 @@ const deleteStudentParents = async (req, res) => {
 
 
 module.exports = {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents, addNewStudent
 }

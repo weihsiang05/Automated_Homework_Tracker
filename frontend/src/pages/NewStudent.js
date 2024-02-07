@@ -1,14 +1,12 @@
 import * as React from 'react';
-import StudentPanel from '../components/StudentPanel';
 import AddNewStudent from '../components/AddNewStudent'
 
-const HomePage = () => {
+const NewStudent = () => {
   return (
     <div>
-      <StudentPanel />
+      <AddNewStudent />
     </div>
   )
-
 };
 
-export default HomePage;
+export default NewStudent;

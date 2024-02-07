@@ -71,17 +71,25 @@ function StudentPanel() {
     navigate(`/${studentId}/studentInfo`);
   }
 
+  const DirectToAddNewStudentPage = async () => {
+    navigate('/newStudent');
+  }
+
+  const DirectToAddNewSubjectPage = async () => {
+    navigate('/newSubject');
+  }
+
   return (
     <div>
 
       <div>
-        <Button variant="outlined" onClick={'/'} style={{ height: '50px' }}>
+        <Button variant="outlined" onClick={DirectToAddNewStudentPage} style={{ height: '50px' }}>
           Add Student
         </Button>
       </div>
 
       <div>
-        <Button variant="outlined" onClick={'/'} style={{ height: '50px' }}>
+        <Button variant="outlined" onClick={DirectToAddNewSubjectPage} style={{ height: '50px' }}>
           Add Subject
         </Button>
       </div>
