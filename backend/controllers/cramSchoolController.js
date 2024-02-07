@@ -466,6 +466,28 @@ const addNewStudent = async (req, res) => {
   }
 }
 
+const addNewSubject = async (req, res) => {
+
+  try {
+    const subject = req.body
+
+    const creatNewSubject = Subject.create({
+      subjectName: subject.subjectName,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    })
+
+    if (creatNewSubject) {
+      res.status(200).json({ status: "success", error: "Successfully create a new subject!" });
+    } else {
+      res.status(200).json({ status: "error", error: "Fail to create a new subject!" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+
+}
+
 // const GetStudentParent = async (req, res) => {
 
 //   try {
@@ -509,5 +531,5 @@ const addNewStudent = async (req, res) => {
 
 
 module.exports = {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents, addNewStudent
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents, addNewStudent, addNewSubject
 }

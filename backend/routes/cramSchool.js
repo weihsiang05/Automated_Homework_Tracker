@@ -9,20 +9,20 @@ const router = express.Router()
 // const studentParent = db.studentParent
 
 const {
-  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents, addNewStudent
+  findAllStudents, editStudentHomework, addStudentHomework, deleteStudent, deleteStudentHomework, updateHomeWorkStatus, updateStudentInfo, getStudentInfo, addStudentParents, deleteStudentParents, addNewStudent, addNewSubject
 } = require('../controllers/cramSchoolController')
 
 router.get('/', findAllStudents)
 
 
 //Render new student page
-router.get('/new/student', (req, res) => {
-  try {
-    res.render('newStudent')
-  } catch (error) {
-    console.error(error)
-  }
-})
+// router.get('/new/student', (req, res) => {
+//   try {
+//     res.render('newStudent')
+//   } catch (error) {
+//     console.error(error)
+//   }
+// })
 
 router.post('/new/student', addNewStudent);
 
@@ -53,33 +53,35 @@ router.post('/new/student', addNewStudent);
 // })
 
 //render new subject page
-router.get('/new/subject', (req, res) => {
-  try {
-    res.render('newSubject')
-  } catch (error) {
-    console.log(error)
-  }
-})
+// router.get('/new/subject', (req, res) => {
+//   try {
+//     res.render('newSubject')
+//   } catch (error) {
+//     console.log(error)
+//   }
+// })
+
+router.post('/new/subject', addNewSubject);
 
 //Create new subject
-router.post('/new/subject', (req, res, next) => {
-  const subject = req.body
+// router.post('/new/subject', (req, res, next) => {
+//   const subject = req.body
 
-  return Subject.create({
-    subjectName: subject.subject,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  })
-    .then(() => {
-      req.flash('success', 'Success to CREATE a subject!')
-      res.redirect('/cramSchool')
-    })
-    .catch((error) => {
-      error.errorMessage = 'Fail to CREATE a subject!'
-      next(error)
-    })
+//   return Subject.create({
+//     subjectName: subject.subject,
+//     createdAt: new Date(),
+//     updatedAt: new Date()
+//   })
+//     .then(() => {
+//       req.flash('success', 'Success to CREATE a subject!')
+//       res.redirect('/cramSchool')
+//     })
+//     .catch((error) => {
+//       error.errorMessage = 'Fail to CREATE a subject!'
+//       next(error)
+//     })
 
-})
+// })
 
 router.post('/edit/homework', editStudentHomework)
 
