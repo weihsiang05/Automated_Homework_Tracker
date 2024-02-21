@@ -27,8 +27,8 @@ app.use(express.json())
 app.use(methodOverride('_method'))
 
 const router = require('./routes')
-const messageHandler = require('./middlewares/message-handler')
-const errorHandler = require('./middlewares/error-handler')
+// const messageHandler = require('./middlewares/message-handler')
+// const errorHandler = require('./middlewares/error-handler')
 const bot = linebot({
   channelId: process.env.CHANNEL_ID,
   channelSecret: process.env.CHANNEL_SECRET,
@@ -110,11 +110,22 @@ bot.on('message', async function (event) {
           //console.log(student)
 
           if (student.length === 0) {
-            event.reply("Can't find the student! Please try again!").then(function (data) {
-              console.log(data);
-            }).catch(function (error) {
-              console.log(error);
-            });
+            const findStudent = await Student.findOne({
+              where: {
+                id: studentId
+              }
+            })
+
+            if (findStudent) {
+              const studentMessage = "\n" + findStudent.FiristName + " " + "Today Homeworks:" + "\n" + " Don't have homework today"
+
+              combinedMessage += studentMessage + "\n"
+            }
+            // event.reply("Can't find the student! Please try again!").then(function (data) {
+            //   console.log(data);
+            // }).catch(function (error) {
+            //   console.log(error);
+            // });
           } else {
             //const replayMsg = 'Hello' + userName
 
@@ -200,15 +211,15 @@ app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(messageHandler)
+// app.use(messageHandler)
 
 app.use(router)
 
-app.use(errorHandler)
+// app.use(errorHandler)
 
-app.engine('.hbs', engine({ extname: '.hbs' }));
-app.set('view engine', '.hbs');
-app.set('views', './views');
+// app.engine('.hbs', engine({ extname: '.hbs' }));
+// app.set('view engine', '.hbs');
+// app.set('views', './views');
 
 bot.listen('/linewebhook', 80);
 
