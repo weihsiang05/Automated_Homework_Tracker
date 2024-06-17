@@ -24,6 +24,7 @@ cd homeworkTracker
 npm install
 ```
 4. Launch the application
+
 Frontend:
 ```
 npm run start
