@@ -45,6 +45,8 @@ In your browser, open http://localhost:3000 to see the website.
 4. Assign student parents![Screenshot 2024-06-17 at 10 51 14 PM](https://github.com/weihsiang05/Automated_Homework_Tracker/assets/142484249/81e42cc9-1854-4e63-8144-4692bba37bd6)
 5. Edit student information
 ![Screenshot 2024-06-17 at 10 50 32 PM](https://github.com/weihsiang05/Automated_Homework_Tracker/assets/142484249/1b860a24-ab22-4e62-849f-9588cf04fc5d)
+6. Generate student homework status on the LINE chat app
+![IMG_0453](https://github.com/weihsiang05/Automated_Homework_Tracker/assets/142484249/126a88af-eed6-4a57-8f7a-e658da5d7ce0)
 
 ## Development Tools
 - express: 4.18.2
