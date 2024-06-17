@@ -24,15 +24,26 @@ cd homeworkTracker
 npm install
 ```
 4. Launch the application
-
+Frontend:
+```
+npm run start
+```
+backend:
 ```
 npm run dev
 ```
-
 In your browser, open http://localhost:3000 to see the website.
 
 ## Demo
-
+1. Main Page
+![Screenshot 2024-06-17 at 10 49 11 PM](https://github.com/weihsiang05/Automated_Homework_Tracker/assets/142484249/6b672857-72bc-4b04-a8ea-2587dd73e4f0)
+2. Add a new Subject
+![Screenshot 2024-06-17 at 10 50 04 PM](https://github.com/weihsiang05/Automated_Homework_Tracker/assets/142484249/24b8f8e6-321c-4cdf-9d07-480740af039e)
+3. Add a new Student
+![Screenshot 2024-06-17 at 10 49 55 PM](https://github.com/weihsiang05/Automated_Homework_Tracker/assets/142484249/af225ffd-d052-4c65-be1a-b151157c1b48)
+4. Assign student parents![Screenshot 2024-06-17 at 10 51 14 PM](https://github.com/weihsiang05/Automated_Homework_Tracker/assets/142484249/81e42cc9-1854-4e63-8144-4692bba37bd6)
+5. Edit student information
+![Screenshot 2024-06-17 at 10 50 32 PM](https://github.com/weihsiang05/Automated_Homework_Tracker/assets/142484249/1b860a24-ab22-4e62-849f-9588cf04fc5d)
 
 ## Development Tools
 - express: 4.18.2
